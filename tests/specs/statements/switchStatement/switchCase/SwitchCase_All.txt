@@ -1,4 +1,26 @@
 ~~ lineWidth: 40 ~~
+== test test test ==
+switch (expr) {
+    case 5: test(); return 10 // COMMENT
+}
+
+[expect]
+switch (expr) {
+    case 5:
+        test();
+        return 10; // COMMENT
+}
+
+== test test ==
+switch (expr) {
+    case 5: return 10 // COMMENT
+}
+
+[expect]
+switch (expr) {
+    case 5: return 10; // COMMENT
+}
+
 == should print ==
 switch (expr) {
 

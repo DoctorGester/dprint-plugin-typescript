@@ -4953,12 +4953,20 @@ fn gen_switch_case<'a>(node: &'a SwitchCase, context: &mut Context<'a>) -> Print
       ));
       items.extend(gen_node(node.cons.get(0).unwrap().into(), context));
     } else {
-      items.push_signal(Signal::NewLine);
-      items.extend(ir_helpers::with_indent(gen_statements(
+      let statements = gen_statements(
         SourceRange::new(colon_token.end(), node.end()),
         node.cons.iter().map(|node| node.into()).collect(),
         context,
-      )));
+      );
+
+      if node.cons.len() == 1 {
+        items.push_signal(Signal::SpaceIfNotTrailing);
+        items.push_signal(Signal::PossibleNewLine);
+        items.extend(statements);
+      } else {
+        items.push_signal(Signal::NewLine);
+        items.extend(ir_helpers::with_indent(statements));
+      }
     }
   }
 
